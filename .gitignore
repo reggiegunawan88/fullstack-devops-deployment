@@ -1,0 +1,8 @@
+# Sensitive files - never commit
+kubeconfig
+*.pem
+*.key
+.env
+
+# Claude Code
+.claude/

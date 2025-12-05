@@ -1,0 +1,38 @@
+apiVersion: k0sctl.k0sproject.io/v1beta1
+kind: Cluster
+metadata:
+  name: k0s-fullstack-devops-cluster
+spec:
+  hosts:
+    # Controller node - runs the Kubernetes control plane
+    - role: controller
+      ssh:
+        address: 192.168.64.2
+        user: ubuntu
+        keyPath: /Users/reggie.admin/.ssh/id_ed25519
+
+    # Worker node 1 - runs your application pods
+    - role: worker
+      ssh:
+        address: 192.168.64.3
+        user: ubuntu
+        keyPath: /Users/reggie.admin/.ssh/id_ed25519
+
+    # Worker node 2 - runs your application pods
+    - role: worker
+      ssh:
+        address: 192.168.64.4
+        user: ubuntu
+        keyPath: /Users/reggie.admin/.ssh/id_ed25519
+
+  k0s:
+    version: 1.31.2+k0s.0
+    config:
+      spec:
+        api:
+          extraArgs:
+            anonymous-auth: "true"
+        network:
+          provider: kuberouter
+          podCIDR: 10.244.0.0/16
+          serviceCIDR: 10.96.0.0/12

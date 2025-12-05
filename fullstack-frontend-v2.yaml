@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fullstack-frontend-v2
+  labels:
+    deployment: fullstack-frontend-v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fullstack-frontend-v2
+  template:
+    metadata:
+      labels:
+        app: fullstack-frontend-v2
+    spec:
+      imagePullSecrets:
+        - name: ecr-secret
+      containers:
+        - name: fullstack-frontend-v2
+          image: 355446107250.dkr.ecr.us-east-1.amazonaws.com/fullstack-devops/frontend-v2:master-3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          env:
+            - name: VITE_API_BASE_URL
+              value: "http://localhost:3001"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fullstack-frontend-v2
+  labels:
+    app: fullstack-frontend-v2-service
+spec:
+  selector:
+    app: fullstack-frontend-v2
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
